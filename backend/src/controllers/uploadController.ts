@@ -3,7 +3,7 @@ import { saveVideoMetadata } from '../models/videoModel';
 
 export const handleUpload = (req: Request, res: Response) => {
   const file = req.file;
-  const { style, level } = req.body;
+  const { style, level, name } = req.body;
 
   if (!file) return res.status(400).send('No file uploaded');
 
@@ -14,6 +14,7 @@ export const handleUpload = (req: Request, res: Response) => {
     size: file.size,
     style,
     level,
+    name: name || file.originalname,
     uploadedAt: new Date().toISOString()
   };
 

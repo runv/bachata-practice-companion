@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import uploadRouter from './routes/upload';
+import videosRouter from './routes/videos';
 
 const app = express();
 const PORT = 3001;
@@ -8,6 +9,7 @@ const PORT = 3001;
 app.use(cors());
 app.use(express.json());
 app.use('/upload', uploadRouter);
+app.use('/videos', videosRouter);
 
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

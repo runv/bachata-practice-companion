@@ -3,12 +3,17 @@ import React, { useState } from 'react';
 const defaultStyles = ['Lady Styling', 'Dominican', 'Footwork', 'Bachazouk'];
 const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
 
-export const UploadForm = () => {
+type Props = {
+  onUpload: () => void;
+};
+
+export const UploadForm = ({ onUpload }: Props) => {
   const [video, setVideo] = useState<File | null>(null);
   const [styles, setStyles] = useState(defaultStyles);
   const [levels, setLevels] = useState(defaultLevels);
   const [selectedStyle, setSelectedStyle] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
+  const [name, setName] = useState('');
   const [newStyle, setNewStyle] = useState('');
   const [newLevel, setNewLevel] = useState('');
 
@@ -18,6 +23,7 @@ export const UploadForm = () => {
 
     const formData = new FormData();
     formData.append('video', video);
+    formData.append('name', name);
     formData.append('style', selectedStyle);
     formData.append('level', selectedLevel);
 
@@ -31,6 +37,7 @@ export const UploadForm = () => {
       alert('Upload successful: ' + JSON.stringify(result.metadata));
       setVideo(null);
       setSelectedStyle('');
+      onUpload();
     } else {
       alert('Upload failed.');
     }
@@ -57,6 +64,18 @@ export const UploadForm = () => {
       <div>
         <label>Upload Video</label>
         <input type="file" accept="video/*" onChange={(e) => setVideo(e.target.files?.[0] ?? null)} />
+      </div>
+
+       <div>
+      <label>
+        Video Name:
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
+      </label>
       </div>
 
       <div>
@@ -103,7 +122,7 @@ export const UploadForm = () => {
         </button>
       </div>
 
-      <button type="submit" disabled={!video || !selectedStyle || !selectedLevel}>
+      <button type="submit" disabled={!video || !selectedStyle || !selectedLevel || !name}>
         Upload
       </button>
     </form>
