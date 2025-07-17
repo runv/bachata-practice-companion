@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useFileValidation } from '../../hooks/useFileValidation';
+
 
 const defaultStyles = ['Lady Styling', 'Dominican', 'Footwork', 'Bachazouk'];
 const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
@@ -16,6 +18,8 @@ export const UploadForm = ({ onUpload }: Props) => {
   const [name, setName] = useState('');
   const [newStyle, setNewStyle] = useState('');
   const [newLevel, setNewLevel] = useState('');
+  const { isTooLarge, sizeInMB, MAX_SIZE_MB } = useFileValidation(video || undefined);
+
 
   const handleUpload = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +70,14 @@ export const UploadForm = ({ onUpload }: Props) => {
         <input type="file" accept="video/*" onChange={(e) => setVideo(e.target.files?.[0] ?? null)} />
       </div>
 
-       <div>
+      {video && (
+        <div>
+          <p>File size: {sizeInMB.toFixed(2)} MB</p>
+          {isTooLarge && <p style={{ color: 'red' }}>File is too large. Please compress it below {MAX_SIZE_MB} MB.</p>}
+        </div>
+      )}
+
+      <div>
       <label>
         Video Name:
         <input
@@ -122,7 +133,7 @@ export const UploadForm = ({ onUpload }: Props) => {
         </button>
       </div>
 
-      <button type="submit" disabled={!video || !selectedStyle || !selectedLevel || !name}>
+      <button type="submit" disabled={!video || !selectedStyle || !selectedLevel || !name || isTooLarge}>
         Upload
       </button>
     </form>
