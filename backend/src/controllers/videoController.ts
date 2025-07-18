@@ -5,24 +5,13 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { lookup } from 'mime-types';
+import * as videoModel from '../models/videoModel';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const metadataPath = path.join(__dirname, '../../storage/videos/metadata.json');
 const videoDir = path.resolve('storage/videos');
 
 export const getVideos = async (req: Request, res: Response) => {
   try {
-    // Check if metadata.json exists
-    try {
-      await fsPromises.access(metadataPath);
-    } catch {
-      // File doesn't exist: return empty array
-      return res.json([]);
-    }
-    const data = await fsPromises.readFile(metadataPath, 'utf-8');
-    const videos = JSON.parse(data);
+    const videos = await videoModel.getAllVideos();
     res.json(videos);
   } catch (error) {
     console.error('Failed to load video metadata:', error);

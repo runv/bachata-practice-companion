@@ -6,6 +6,7 @@ export type VideoMeta = {
   filename: string;
   style: string;
   level: string;
+  tags?: string[]; 
 };
 
 type Props = {

@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { useFileValidation } from '../../hooks/UseFileValidation';
 import { VideoCompressor } from '../VideoCompressor';
+import { uploadVideo } from '../../api/videoApi';
 
-
-const defaultStyles = ['Bachata Sensual', 'Lady Styling', 'Dominican', 'Footwork', 'Bachazouk'];
-const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
 
 type Props = {
+  defaultStyles: Array<string>;
+  defaultLevels: Array<string>;
   onUpload: () => void;
+
 };
 
-export const UploadForm = ({ onUpload }: Props) => {
+export const UploadForm = ({ defaultLevels, defaultStyles, onUpload }: Props) => {
   const [video, setVideo] = useState<File | null>(null);
   const [styles, setStyles] = useState(defaultStyles);
   const [levels, setLevels] = useState(defaultLevels);
@@ -19,6 +20,7 @@ export const UploadForm = ({ onUpload }: Props) => {
   const [name, setName] = useState('');
   const [newStyle, setNewStyle] = useState('');
   const [newLevel, setNewLevel] = useState('');
+  const [tags, setTags] = useState('');
   const { isTooLarge, sizeInMB, MAX_SIZE_MB } = useFileValidation(video || undefined);
 
 
@@ -32,19 +34,23 @@ export const UploadForm = ({ onUpload }: Props) => {
     formData.append('style', selectedStyle);
     formData.append('level', selectedLevel);
 
-    const res = await fetch('http://localhost:3001/upload', {
-      method: 'POST',
-      body: formData,
-    });
+     // Normalize tags to lowercase, trim, remove empty
+    const normalizedTags = tags
+      .split(',')
+      .map(t => t.trim().toLowerCase())
+      .filter(t => t.length > 0);
 
-    if (res.ok) {
-      const result = await res.json();
+    formData.append('tags', JSON.stringify(normalizedTags));
+    try {
+      const result = await uploadVideo(formData);
       alert('Upload successful: ' + JSON.stringify(result.metadata));
       setVideo(null);
       setSelectedStyle('');
+      setSelectedLevel('');
+      setTags('');
       onUpload();
-    } else {
-      alert('Upload failed.');
+    } catch (e) {
+      alert((e as Error).message);
     }
   };
 
@@ -144,6 +150,15 @@ export const UploadForm = ({ onUpload }: Props) => {
           + Add Level
         </button>
       </div>
+      <label>
+        Tags (comma-separated):
+        <input
+          type="text"
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          placeholder="e.g. hip movement, arms, balance"
+        />
+      </label>
 
       <button type="submit" disabled={!video || !selectedStyle || !selectedLevel || !name || isTooLarge}>
         Upload

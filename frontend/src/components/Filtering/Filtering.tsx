@@ -1,19 +1,27 @@
+import { TagsFilter } from '../TagsFilter';
+
 interface FilteringProps {
   selectedStyle: string;
   selectedLevel: string;
-  onStyleChange: (value: string) => void;
-  onLevelChange: (value: string) => void;
   styles: string[];
   levels: string[];
+  onStyleChange: (value: string) => void;
+  onLevelChange: (value: string) => void;
+  tags: string[];
+  selectedTags: string[];
+  onToggleTag: (tag: string) => void;
 }
 
 export const Filtering = ({
   selectedStyle,
   selectedLevel,
+  styles,
+  levels,
   onStyleChange,
   onLevelChange,
-  styles,
-  levels
+  tags,
+  selectedTags,
+  onToggleTag,
 }: FilteringProps) => {
   return (
     <div style={{ marginBottom: '1rem' }}>
@@ -22,7 +30,9 @@ export const Filtering = ({
         <select value={selectedStyle} onChange={e => onStyleChange(e.target.value)}>
           <option value="">All</option>
           {styles.map(style => (
-            <option key={style} value={style}>{style}</option>
+            <option key={style} value={style}>
+              {style}
+            </option>
           ))}
         </select>
       </label>
@@ -32,11 +42,14 @@ export const Filtering = ({
         <select value={selectedLevel} onChange={e => onLevelChange(e.target.value)}>
           <option value="">All</option>
           {levels.map(level => (
-            <option key={level} value={level}>{level}</option>
+            <option key={level} value={level}>
+              {level}
+            </option>
           ))}
         </select>
       </label>
+
+      <TagsFilter tags={tags} selectedTags={selectedTags} onToggle={onToggleTag} />
     </div>
   );
 };
-
