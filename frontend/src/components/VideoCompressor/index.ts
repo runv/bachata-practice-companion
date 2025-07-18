@@ -1,0 +1,1 @@
+export { VideoCompressor } from './VideoCompressor';

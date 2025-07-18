@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { useFileValidation } from '../../hooks/useFileValidation';
+import { useFileValidation } from '../../hooks/UseFileValidation';
+import { VideoCompressor } from '../VideoCompressor';
 
 
-const defaultStyles = ['Lady Styling', 'Dominican', 'Footwork', 'Bachazouk'];
+const defaultStyles = ['Bachata Sensual', 'Lady Styling', 'Dominican', 'Footwork', 'Bachazouk'];
 const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
 
 type Props = {
@@ -76,6 +77,17 @@ export const UploadForm = ({ onUpload }: Props) => {
           {isTooLarge && <p style={{ color: 'red' }}>File is too large. Please compress it below {MAX_SIZE_MB} MB.</p>}
         </div>
       )}
+
+      {
+        video && isTooLarge && (
+          <VideoCompressor
+            file={video}
+            onCompressed={(file) => setVideo(file)}
+            onError={(msg) => console.log(msg)}
+          />
+        )
+      }
+
 
       <div>
       <label>

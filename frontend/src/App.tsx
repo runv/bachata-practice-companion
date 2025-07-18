@@ -34,12 +34,13 @@ function App() {
     <main>
       <h1>Bachata Practice Companion</h1>
       <UploadForm onUpload={triggerRefresh}/>
+      
       <Filtering
         selectedStyle={selectedStyle}
         selectedLevel={selectedLevel}
         onStyleChange={setSelectedStyle}
         onLevelChange={setSelectedLevel}
-        styles={['Lady Styling', 'Dominican', 'Footwork', 'Bachazouk']}
+        styles={['Bachata Sensual', 'Lady Styling', 'Dominican', 'Footwork', 'Bachazouk']}
         levels={['Beginner', 'Intermediate', 'Advanced']}
       />
       <VideoList videos={filteredVideos}/>
