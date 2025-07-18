@@ -4,6 +4,8 @@ build
 *.env
 .DS_Store 
 backend/storage/videos/
+backend/storage/thumbnails/
+backend/storage/
 .npmrc
 .yarnrc.yml
 /backend/dev.sh

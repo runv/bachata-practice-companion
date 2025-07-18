@@ -11,13 +11,14 @@ export interface VideoMetadata {
   id: string;
   originalname: string;
   filename: string;
+  name?: string;
   mimetype: string;
   size: number;
-  name?: string;
   style: string;
   level: string;
-  uploadedAt: string;
   tags?: string[]; 
+  thumbnail: string;
+  uploadedAt: string;
 }
 
 

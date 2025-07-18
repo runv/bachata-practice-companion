@@ -88,6 +88,7 @@ export const UploadForm = ({ defaultLevels, defaultStyles, onUpload }: Props) =>
         video && isTooLarge && (
           <VideoCompressor
             file={video}
+            maxSizeBytes={MAX_SIZE_MB}
             onCompressed={(file) => setVideo(file)}
             onError={(msg) => console.log(msg)}
           />
