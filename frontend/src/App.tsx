@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-//import { UploadForm } from './components/UploadForm';
+import { UploadForm } from './components/UploadForm';
 import { VideoList } from './components/VideoList';
 import type { VideoMeta } from './components/VideoList';
 import { Filtering } from './components/Filtering';
@@ -7,32 +7,32 @@ import {
   fetchVideos as remoteFetchVideos, 
   fetchTags  as remoteFetchTags, 
   fetchCategories as remoteFetchCategories,
-  //addCategory as remoteAddCategory,
-  //uploadVideo
+  addCategory as remoteAddCategory,
+  uploadVideo
 } from './api/videoApi';
 import { AppLayout } from './components/ui/AppLayout';
+import { Dialog } from './components/ui/Dialog';
 
 
 const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
 
-/*type Data = { 
+type Data = { 
   video: File; 
   name: string; 
   category: string; 
   level: string; 
   tags: string[] 
-}*/
-
+}
 
 function App() {
  const [videos, setVideos] = useState<VideoMeta[]>([]);
  const [tags, setTags] = useState<string[]>([]);
  const [categories, setCategories] = useState<string[]>([]);
- //const [refreshToggle, setRefreshToggle] = useState(false); // Used to trigger refresh
+ const [refreshToggle, setRefreshToggle] = useState(false); // Used to trigger refresh
  const [selectedCategory, setSelectedCategory] = useState('');
  const [selectedLevel, setSelectedLevel] = useState('');
  const [selectedTags, setSelectedTags] = useState<string[]>([]);
- const [, setShowUploadDialog] = useState(false); 
+ const [showUploadDialog, setShowUploadDialog] = useState(false); 
 
   // Fetch videos
  useEffect(() => {
@@ -51,10 +51,10 @@ function App() {
     fetchVideos();
     fetchTags();
     fetchCategories();
- }, []); // <- re-fetch when toggled
+ }, [refreshToggle]); // <- re-fetch when toggled
 
 
-/*const handleAddCategory = async (category: string) => {
+const handleAddCategory = async (category: string) => {
   const addCategory = async () => {
     const response = await remoteAddCategory(category);
     setCategories(response);
@@ -73,7 +73,7 @@ const handleUploadSubmit = async (data: Data) => {
 
   await uploadVideo(formData);
   setRefreshToggle(!refreshToggle); // trigger refresh
-};*/
+};
 
  const toggleTag = (tag: string) => {
   setSelectedTags(prev =>
@@ -89,6 +89,7 @@ const handleUploadSubmit = async (data: Data) => {
  });
 
  return (
+    <>
       <AppLayout
         title="Bachata Practice Companion"
         onUploadClick={() => setShowUploadDialog(true)}
@@ -107,6 +108,17 @@ const handleUploadSubmit = async (data: Data) => {
         }
         thumbnails={<VideoList videos={filteredVideos} />}
       />
+      <Dialog 
+         open={showUploadDialog} 
+         onClose={() => setShowUploadDialog(false)} ariaLabel="Upload Video">
+        <UploadForm 
+          categories={categories}
+          defaultLevels={defaultLevels}
+          onSubmit={handleUploadSubmit}
+          onAddCategory={handleAddCategory}
+        />
+      </Dialog>
+    </>
   );
 }
 
