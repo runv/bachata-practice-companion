@@ -1,4 +1,6 @@
 import { TagsFilter } from '../TagsFilter';
+import * as styles from './themes/FilterSection.css';
+import { Select } from '../ui/Select'; 
 
 interface FilteringProps {
   selectedCategory: string;
@@ -24,32 +26,33 @@ export const Filtering = ({
   onToggleTag,
 }: FilteringProps) => {
   return (
-    <div style={{ marginBottom: '1rem' }}>
-      <label>
-        Category:
-        <select value={selectedCategory} onChange={e => onCategoryChange(e.target.value)}>
-          <option value="">All</option>
-          {categories.map(style => (
-            <option key={style} value={style}>
-              {style}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label style={{ marginLeft: '1rem' }}>
-        Level:
-        <select value={selectedLevel} onChange={e => onLevelChange(e.target.value)}>
-          <option value="">All</option>
-          {levels.map(level => (
-            <option key={level} value={level}>
-              {level}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <TagsFilter tags={tags} selectedTags={selectedTags} onToggle={onToggleTag} />
-    </div>
+    <section className={styles.filterSection}>
+      <div className={styles.filterGroup}>
+        <label htmlFor="category">Category</label>
+        <Select
+          label=""
+          value={selectedCategory}
+          onChange={(e) => onCategoryChange(e.target.value)}
+          options={['All', ...categories]}
+        />
+      </div>
+      <div className={styles.filterGroup}>
+        <label htmlFor="level">Level</label>
+        <Select
+          label=""
+          value={selectedLevel}
+          onChange={(e) => onLevelChange(e.target.value)}
+          options={['All', ...levels]}
+        />
+      </div>
+      <div className={styles.filterGroup}>
+        <label>Tags</label>
+        <TagsFilter 
+          tags={tags} 
+          selectedTags={selectedTags} 
+          onToggle={onToggleTag} 
+        />
+      </div>
+    </section>
   );
 };

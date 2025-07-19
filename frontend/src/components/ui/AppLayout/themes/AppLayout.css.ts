@@ -1,0 +1,217 @@
+import { style } from '@vanilla-extract/css';
+import { vars } from '../../../Common/styles/theme.css';
+
+// App outer wrapper (add this to your main entry, e.g. wrap <AppLayout /> in App.tsx)
+export const appRoot = style({
+  minHeight: '100vh',
+  background: '#f7f7fa',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  padding: `clamp(${vars.space.md}, 4vw, ${vars.space.xl})`,
+  boxSizing: 'border-box',
+});
+
+// Main grid container
+export const container = style({
+  width: '100%',
+  maxWidth: 'clamp(320px, 90vw, 1200px)', // Fluid, not hardcoded
+  marginLeft: 'auto',
+  marginRight: 'auto',
+  display: 'grid',
+  gridTemplateColumns: 'minmax(320px, 1fr) 2fr',
+  gridTemplateRows: 'auto 1fr',
+  gap: vars.space.xl,
+  background: vars.color.background,
+  borderRadius: vars.radius.xl,
+  boxShadow: vars.shadow.md,
+  boxSizing: 'border-box',
+  padding: `0 clamp(${vars.space.lg}, 6vw, ${vars.space.xl})`,
+  '@media': {
+    'screen and (max-width: 1200px)': {
+      maxWidth: '100vw',
+      gridTemplateColumns: 'minmax(220px, 1fr) 2fr',
+      gap: vars.space.lg,
+      padding: `0 clamp(${vars.space.md}, 4vw, ${vars.space.lg})`,
+    },
+    'screen and (max-width: 900px)': {
+      gridTemplateColumns: '1fr',
+      gridTemplateRows: 'auto auto 1fr',
+      gap: vars.space.md,
+      borderRadius: vars.radius.lg,
+      boxShadow: 'none',
+      padding: vars.space.sm,
+    },
+    'screen and (max-width: 600px)': {
+      padding: vars.space.xs,
+      gap: vars.space.sm,
+    },
+  },
+});
+
+// Header bar
+export const headerBar = style({
+  gridColumn: '1 / -1',
+  position: 'sticky',
+  top: 0,
+  zIndex: 30,
+  display: 'flex',
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  padding: `${vars.space.md} ${vars.space.lg}`,
+  background: vars.color.background,
+  borderBottom: `1px solid ${vars.color.border}`,
+  boxShadow: vars.shadow.md,
+  minHeight: '3.5rem',
+  gap: vars.space.md,
+  '@media': {
+    'screen and (max-width: 900px)': {
+      padding: `${vars.space.sm} ${vars.space.md}`,
+      minHeight: '3rem',
+      gap: vars.space.sm,
+    },
+    'screen and (max-width: 600px)': {
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: vars.space.sm,
+      padding: `${vars.space.xs} ${vars.space.xs}`,
+      minHeight: '2.5rem',
+    },
+  },
+});
+
+// Title
+export const title = style({
+  fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+  fontWeight: 700,
+  color: vars.color.text,
+  margin: 0,
+  letterSpacing: '0.01em',
+  lineHeight: 1.2,
+  flex: 1,
+  '@media': {
+    'screen and (max-width: 600px)': {
+      fontSize: '1.5rem',
+    },
+  },
+});
+
+// Upload button
+export const uploadButton = style({
+  padding: `${vars.space.sm} ${vars.space.lg}`,
+  backgroundColor: vars.color.primary,
+  color: vars.color.primaryText,
+  border: 'none',
+  borderRadius: vars.radius.md,
+  cursor: 'pointer',
+  fontWeight: 'bold',
+  fontSize: vars.font.size.base,
+  boxShadow: vars.shadow.sm,
+  transition: 'background 0.2s',
+  marginLeft: vars.space.md,
+  whiteSpace: 'nowrap',
+  alignSelf: 'center',
+  ':hover': {
+    backgroundColor: vars.color.secondary,
+  },
+  '@media': {
+    'screen and (max-width: 600px)': {
+      marginLeft: 0,
+      width: '100%',
+      fontSize: vars.font.size.sm,
+      alignSelf: 'stretch',
+    },
+  },
+});
+
+// Main content grid
+export const mainContent = style({
+  gridColumn: '1 / -1',
+  display: 'grid',
+  gridTemplateColumns: 'minmax(0, 340px) 1fr',
+  gap: vars.space.xl,
+  alignItems: 'start',
+  '@media': {
+    'screen and (max-width: 1100px)': {
+      gridTemplateColumns: 'minmax(0, 280px) 1fr',
+      gap: vars.space.lg,
+    },
+    'screen and (max-width: 900px)': {
+      gridTemplateColumns: '1fr',
+      gap: vars.space.md,
+    },
+    'screen and (max-width: 600px)': {
+      gap: vars.space.sm,
+    },
+  },
+});
+
+// Filters sidebar
+export const filtersSidebar = style({
+  gridColumn: '1',
+  position: 'sticky',
+  top: 'calc(3.5rem + 1vw)',
+  alignSelf: 'start',
+  background: vars.color.background,
+  borderRadius: vars.radius.lg,
+  boxShadow: vars.shadow.md,
+  padding: vars.space.lg,
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.md,
+  border: `1px solid ${vars.color.border}`,
+  minWidth: '12rem',
+  maxWidth: '18rem',
+  zIndex: 20,
+  '@media': {
+    'screen and (max-width: 900px)': {
+      position: 'static',
+      minWidth: 'unset',
+      maxWidth: 'unset',
+      gridColumn: '1',
+      gridRow: '2',
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      width: '100%',
+      padding: vars.space.md,
+      gap: vars.space.sm,
+      marginBottom: vars.space.sm,
+      borderRadius: vars.radius.md,
+      boxShadow: 'none',
+    },
+    'screen and (max-width: 600px)': {
+      flexDirection: 'column',
+      width: '100%',
+      padding: vars.space.sm,
+      gap: vars.space.xs,
+      marginBottom: vars.space.xs,
+      borderRadius: vars.radius.md,
+    },
+  },
+});
+
+// Thumbnails section
+export const thumbnailsSection = style({
+  gridColumn: '2',
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'stretch',
+  gap: vars.space.md,
+  width: '100%',
+  marginTop: 0,
+  '@media': {
+    'screen and (max-width: 900px)': {
+      gridColumn: '1',
+      gridRow: '3',
+      width: '100%',
+      gap: vars.space.sm,
+      marginTop: 0,
+    },
+    'screen and (max-width: 600px)': {
+      gap: vars.space.xs,
+      marginTop: 0,
+    },
+  },
+});
+

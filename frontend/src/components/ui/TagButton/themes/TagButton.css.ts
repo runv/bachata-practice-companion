@@ -5,35 +5,26 @@ import { vars } from '../../../Common/styles/theme.css';
 export const tagButton = style({
   display: 'inline-block',
   backgroundColor: vars.color.primary,
-  color: vars.color.text,
-  padding: `4px 8px`,
-  borderRadius: vars.radius.sm,
-  fontSize: '0.9rem',
+  color: vars.color.primaryText,
+  padding: `${vars.space.xs} ${vars.space.md}`,
+  borderRadius: '9999px', // pill shape
+  fontSize: vars.font.size.sm,
   marginRight: vars.space.sm,
   marginBottom: vars.space.sm,
   border: `1px solid ${vars.color.border}`,
   cursor: 'pointer',
+  minWidth: '2.5rem',
+  transition: 'background 0.2s, color 0.2s',
   selectors: {
     '&:hover': {
-    //  backgroundColor: vars.color.tag,
-      opacity: 0.7,
+      opacity: 0.8,
       color: '#fff',
     },
   },
 });
 
-/*export const tagButton = style({
-  border: '1px solid #ccc',
-  borderRadius: '20px',
-  padding: '0.25rem 0.75rem',
-  fontSize: '0.85rem',
-  cursor: 'pointer',
-  backgroundColor: '#f5f5f5',
-  transition: 'all 0.2s',
-});*/
-
 export const selectedTag = style({
-  backgroundColor: '#1976d2',
+  backgroundColor: vars.color.secondary,
   color: 'white',
-  borderColor: '#1976d2',
+  borderColor: vars.color.secondary,
 });

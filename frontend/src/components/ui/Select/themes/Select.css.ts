@@ -6,6 +6,7 @@ export const selectWrapper = style({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.space.xs,
+  width: '100%',
 });
 
 export const label = style({
@@ -20,6 +21,8 @@ export const select = style({
   border: `1px solid ${vars.color.border}`,
   backgroundColor: vars.color.input,
   color: vars.color.text,
+  width: '100%',
+  minWidth: '8rem',
   transition: 'border 0.2s ease',
   ':focus': {
     outline: 'none',

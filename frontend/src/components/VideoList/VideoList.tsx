@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as styles from './themes/VideoList.css'; 
 
 export type VideoMeta = {
   originalname: string;
@@ -19,20 +20,22 @@ export const VideoList = ({ videos }: Props) => {
   //if (loading) return <div>Loading videos...</div>;
 
   return (
-    <div>
+    <div className={styles.thumbnailGrid}>
       {videos.length === 0 && <p>No videos uploaded yet.</p>}
       {videos.map((video) => (
-        <div key={video.name} style={{ display: 'inline-block', margin: '1rem' }}>
-          <img
-            src={`http://localhost:3001/thumbnails/${video.thumbnail}`}
-            alt={video.name}
-            style={{ width: '200px', cursor: 'pointer', borderRadius: '8px' }}
-            onClick={
-                () => setSelectedVideo(video.filename)
-            }
-          />
-          <h3>{video.name}</h3>
-          <p>{video.style} • {video.level}</p>
+        <div key={video.name} className={styles.thumbnailCard}>
+          <div className={styles.thumbnail}>
+            <img
+              src={`http://localhost:3001/thumbnails/${video.thumbnail}`}
+              alt={video.name}
+              className={styles.thumbnailImage}
+              onClick={
+                  () => setSelectedVideo(video.filename)
+              }
+            />
+            <h3 className={styles.title}>{video.name}</h3>
+            <p className={styles.categoryLevel}>{video.style} • {video.level}</p>
+          </div>
         </div>
       ))}
       {selectedVideo && (
