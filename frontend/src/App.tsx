@@ -3,16 +3,32 @@ import { UploadForm } from './components/UploadForm';
 import { VideoList } from './components/VideoList';
 import type { VideoMeta } from './components/VideoList';
 import { Filtering } from './components/Filtering';
-import { fetchVideos as remoteFetchVideos, fetchTags  as remoteFetchTags} from './api/videoApi';
+import { 
+  fetchVideos as remoteFetchVideos, 
+  fetchTags  as remoteFetchTags, 
+  fetchCategories as remoteFetchCategories,
+  addCategory as remoteAddCategory,
+  uploadVideo
+} from './api/videoApi';
 
-const defaultStyles = ['Bachata Sensual', 'Lady Styling', 'Dominican', 'Footwork', 'Bachazouk'];
+
 const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
+
+type Data = { 
+  video: File; 
+  name: string; 
+  category: string; 
+  level: string; 
+  tags: string[] 
+}
+
 
 function App() {
  const [videos, setVideos] = useState<VideoMeta[]>([]);
  const [tags, setTags] = useState<string[]>([]);
+ const [categories, setCategories] = useState<string[]>([]);
  const [refreshToggle, setRefreshToggle] = useState(false); // Used to trigger refresh
- const [selectedStyle, setSelectedStyle] = useState('');
+ const [selectedCategory, setSelectedCategory] = useState('');
  const [selectedLevel, setSelectedLevel] = useState('');
  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
@@ -26,12 +42,35 @@ function App() {
       const response = await remoteFetchTags();
       setTags(response);
     };
+    const fetchCategories = async () => {
+      const response = await remoteFetchCategories();
+      setCategories(response);
+    };
     fetchVideos();
     fetchTags();
+    fetchCategories();
  }, [refreshToggle]); // <- re-fetch when toggled
 
- // Passed to UploadForm so it can trigger refresh
- const triggerRefresh = () => setRefreshToggle((prev) => !prev);
+
+const handleAddCategory = async (category: string) => {
+  const addCategory = async () => {
+    const response = await remoteAddCategory(category);
+    setCategories(response);
+  };
+  addCategory();
+};
+
+const handleUploadSubmit = async (data: Data) => {
+  const formData = new FormData();
+  formData.append('video', data.video);
+  formData.append('name', data.name);
+  formData.append('style', data.category); // backend still uses 'style'
+  formData.append('level', data.level);
+  formData.append('tags', JSON.stringify(data.tags));
+
+  await uploadVideo(formData);
+  setRefreshToggle(!refreshToggle); // trigger refresh
+};
 
  const toggleTag = (tag: string) => {
   setSelectedTags(prev =>
@@ -40,7 +79,7 @@ function App() {
  };
 
  const filteredVideos = videos.filter(video => {
-    const styleMatch = selectedStyle ? video.style === selectedStyle : true;
+    const styleMatch = selectedCategory ? video.style === selectedCategory : true;
     const levelMatch = selectedLevel ? video.level === selectedLevel : true;
     const tagsMatch = selectedTags.every(tag => video.tags?.includes(tag));
     return styleMatch && levelMatch && tagsMatch;
@@ -50,16 +89,17 @@ function App() {
     <main>
       <h1>Bachata Practice Companion</h1>
       <UploadForm 
-        defaultStyles={defaultStyles}
+        categories={categories}
         defaultLevels={defaultLevels}
-        onUpload={triggerRefresh}
+        onSubmit={handleUploadSubmit}
+        onAddCategory={handleAddCategory}
       />
       <Filtering
-        selectedStyle={selectedStyle}
+        selectedCategory={selectedCategory}
         selectedLevel={selectedLevel}
-        onStyleChange={setSelectedStyle}
+        onCategoryChange={setSelectedCategory}
         onLevelChange={setSelectedLevel}
-        styles={defaultStyles}
+        categories={categories}
         levels={defaultLevels}
         tags={tags}
         selectedTags={selectedTags}

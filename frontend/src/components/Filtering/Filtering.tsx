@@ -1,11 +1,11 @@
 import { TagsFilter } from '../TagsFilter';
 
 interface FilteringProps {
-  selectedStyle: string;
+  selectedCategory: string;
   selectedLevel: string;
-  styles: string[];
+  categories: string[];
   levels: string[];
-  onStyleChange: (value: string) => void;
+  onCategoryChange: (value: string) => void;
   onLevelChange: (value: string) => void;
   tags: string[];
   selectedTags: string[];
@@ -13,11 +13,11 @@ interface FilteringProps {
 }
 
 export const Filtering = ({
-  selectedStyle,
+  selectedCategory,
   selectedLevel,
-  styles,
+  categories,
   levels,
-  onStyleChange,
+  onCategoryChange,
   onLevelChange,
   tags,
   selectedTags,
@@ -26,10 +26,10 @@ export const Filtering = ({
   return (
     <div style={{ marginBottom: '1rem' }}>
       <label>
-        Style:
-        <select value={selectedStyle} onChange={e => onStyleChange(e.target.value)}>
+        Category:
+        <select value={selectedCategory} onChange={e => onCategoryChange(e.target.value)}>
           <option value="">All</option>
-          {styles.map(style => (
+          {categories.map(style => (
             <option key={style} value={style}>
               {style}
             </option>
