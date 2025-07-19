@@ -29,6 +29,10 @@ export const streamVideo = async (req: Request, res: Response) => {
     const range = req.headers.range;
     const mimeType = lookup(filePath) || 'application/octet-stream';
 
+    res.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+
     if (!range) {
       res.writeHead(200, {
         'Content-Length': fileSize,

@@ -46,10 +46,10 @@ export const VideoList = ({ videos, onUploadClick }: Props) => {
             />
             <div className={styles.thumbnailText}>
               <h3 className={styles.title}>{video.name}</h3>
-              <p className={styles.categoryLevel}>
+              <div className={styles.categoryLevel}>
                 <div>{video.style}</div> 
                 <div>{video.level}</div>
-              </p>
+              </div>
             </div>
           </div>
         </div>

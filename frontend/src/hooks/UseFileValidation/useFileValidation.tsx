@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-const MAX_SIZE_MB = 50;
+const MAX_SIZE_MB = 20;
 
 export const useFileValidation = (file?: File) => {
   const result = useMemo(() => {

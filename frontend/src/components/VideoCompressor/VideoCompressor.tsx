@@ -1,16 +1,18 @@
 import { useEffect, useState, useRef } from 'react';
-import {  FFmpeg } from '@ffmpeg/ffmpeg';
-import { fetchFile, toBlobURL } from '@ffmpeg/util'
-
-//const ffmpeg = new FFmpeg()({ log: true });
+import { FFmpeg } from '@ffmpeg/ffmpeg';
+import { fetchFile, toBlobURL } from '@ffmpeg/util';
+import * as style from './themes/VideoCompressor.css';
+import { ProgressBar } from '../ui/ProgressBar';
+import { Button } from '../ui/Button';
 
 interface VideoCompressorProps {
   file: File;
   onCompressed: (compressedFile: File) => void;
   onError?: (error: string) => void;
-  maxSizeBytes?: number; // Default: 100MB
+  maxSizeBytes?: number;
 }
-const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.6/dist/esm'
+
+const baseURL = 'https://unpkg.com/@ffmpeg/core-mt@0.12.10/dist/esm';
 
 export const VideoCompressor = ({
   file,
@@ -19,36 +21,48 @@ export const VideoCompressor = ({
   maxSizeBytes = 100 * 1024 * 1024,
 }: VideoCompressorProps) => {
   const [loading, setLoading] = useState(false);
-  const messageRef = useRef<HTMLDivElement>(null);
+  const compressionInProgressRef = useRef(false);
+  const [progress, setProgress] = useState(0); // percent
+  const [bytesProcessed, setBytesProcessed] = useState(0);
+  const [compressedFile, setCompressedFile] = useState<File | null>(null);
+  const [done, setDone] = useState(false);
+  const [error, setError] = useState('');
+  const [originalSize, ] = useState(file.size);
+  const [compressedSize, setCompressedSize] = useState<number | null>(null);
+
+  //const messageRef = useRef<HTMLDivElement>(null);
   const ffmpegRef = useRef(new FFmpeg());
   const ffmpeg = ffmpegRef.current;
-
+  const videoUrl = useRef<string | null>(null);
+  
   useEffect(() => {
     const compressVideo = async () => {
       setLoading(true);
+      compressionInProgressRef.current = true;
+      setError('');
+      setDone(false);
+      setCompressedFile(null);
+      setCompressedSize(null);
+      setProgress(0);
+      setBytesProcessed(0);
 
       try {
-        ffmpeg.on("log", ({ message }) => {
-          console.log("ffmpeg:" + message);
+        ffmpeg.on('progress', ({ progress }) => {
+          setProgress(Math.round(progress * 100));
+          setBytesProcessed(Math.round(progress * file.size));
         });
 
-        ffmpeg.on('progress', ({ progress, time }) => {
-            if (messageRef.current)
-            messageRef.current.innerHTML = `${progress * 100} % (transcoded time: ${time / 1000000} s)`;
-        });
         if (!ffmpeg.loaded) {
-          await ffmpeg.load(
-            {
+          await ffmpeg.load({
             coreURL: await toBlobURL(`${baseURL}/ffmpeg-core.js`, 'text/javascript'),
             wasmURL: await toBlobURL(`${baseURL}/ffmpeg-core.wasm`, 'application/wasm'),
             workerURL: await toBlobURL(`${baseURL}/ffmpeg-core.worker.js`, 'text/javascript')
-           }
-          );
+          });
         }
 
         const inputName = 'input.mp4';
         const outputName = 'output.mp4';
-        await ffmpeg.writeFile( inputName, await fetchFile(file));
+        await ffmpeg.writeFile(inputName, await fetchFile(file));
 
         // Step 1: Try standard CRF-based compression
         await ffmpeg.exec([
@@ -59,8 +73,7 @@ export const VideoCompressor = ({
           '-b:a', '128k',
           '-r', '30',
           outputName
-         ]
-        );
+        ]);
 
         let fileData = await ffmpeg.readFile(outputName);
         let data = new Uint8Array(fileData as ArrayBuffer);
@@ -68,15 +81,9 @@ export const VideoCompressor = ({
 
         // Step 2: Check size and fallback to bitrate-based compression
         if (blob.size > maxSizeBytes) {
-          console.warn('First compression too large, trying bitrate-based fallback');
-
-          // Get video duration (in seconds)
           const duration = await getVideoDuration(blob);
-
-          // Calculate target bitrate in kbps
           const targetBitrate = Math.round((maxSizeBytes * 8) / duration / 1000); // kbps
 
-          // Cleanup and overwrite input file
           ffmpeg.deleteFile(outputName);
 
           await ffmpeg.exec([
@@ -98,29 +105,131 @@ export const VideoCompressor = ({
           }
         }
 
-        const compressedFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.mp4'), {
+        const resultFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.mp4'), {
           type: 'video/mp4',
         });
 
         ffmpeg.deleteFile(outputName);
         ffmpeg.deleteFile(inputName);
 
-        onCompressed(compressedFile);
+        setCompressedFile(resultFile);
+        setCompressedSize(resultFile.size);
+        setDone(true);
+        onCompressed(resultFile);
       } catch (err) {
-        console.error(err);
-        if (onError) onError((err as Error).message || 'Compression failed');
+        setError((err as Error).message || 'Compression failed');
+        if (onError) onError((err as Error).message || 'Compression failed ');
       } finally {
         setLoading(false);
+        compressionInProgressRef.current = false;
       }
     };
+    console.log("use effect for compress file " + file + " compressionInProgress: " + compressionInProgressRef.current);
 
+   // if (videoUrl.current) URL.revokeObjectURL(videoUrl.current);
+    //  videoUrl.current = URL.createObjectURL(file);
+    if ( compressionInProgressRef.current === true ) return;
     compressVideo();
-  }, [file, maxSizeBytes, onCompressed, onError, ffmpeg]);
 
-  return <>
-    <div ref={messageRef}></div>
-    <div>{loading && <p>Compressing video, please wait…</p>}</div>
-  </>;
+    // Clean up video URL
+    return () => {
+      console.log("cleanup use effect for compress file  " );
+     // if (videoUrl.current) URL.revokeObjectURL(videoUrl.current);
+    };
+  // omit ffmpeg from the dependency array because it is stable via useRef.
+  // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, [file, maxSizeBytes, onCompressed, onError]);
+
+  // Generate preview URL for video placeholder
+  useEffect(() => {
+    console.log("use effect for file objtc url called file " + file);
+    if (file) {
+      console.log("setup file url obj " + videoUrl.current);
+      //if (videoUrl.current) URL.revokeObjectURL(videoUrl.current);
+      videoUrl.current = URL.createObjectURL(file);
+    }
+    return () => {
+      console.log("cleanup file url obj" + videoUrl.current);
+      if (videoUrl.current) URL.revokeObjectURL(videoUrl.current);
+    };
+  }, [file]);
+
+  return (
+    <div>
+      {/* Video Placeholder */}
+      <div className={style.videoPlaceholder}>
+        <video
+          src={videoUrl.current || undefined}
+          className={done ? style.videoReady : style.videoTag}
+          controls={done}
+          autoPlay={false}
+          playsInline
+          tabIndex={-1}
+          style={{ pointerEvents: done ? 'auto' : 'none' }}
+        />
+        {!done && (
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'rgba(0,0,0,0.7)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontSize: 'clamp(1.2rem, 2vw, 2rem)',
+              fontWeight: 600,
+              zIndex: 2,
+            }}
+          >
+            Preview
+          </div>
+        )}
+      </div>
+
+      {/* Progress Info */}
+      {loading && (
+        <>
+          <ProgressBar progress={progress} />
+          <div className={style.progressInfo}>
+            Compressing... {progress}% ({(bytesProcessed / 1024 / 1024).toFixed(1)} MB / {(originalSize / 1024 / 1024).toFixed(1)} MB)
+          </div>
+        </>
+      )}
+
+      {/* Success Message and Download */}
+      {done && compressedFile && (
+        <>
+          <div className={style.successMessage}>Compression Done!</div>
+          <div className={style.progressInfo}>
+            Original: {(originalSize / 1024 / 1024).toFixed(1)} MB &nbsp;|&nbsp; Compressed: {(compressedSize! / 1024 / 1024).toFixed(1)} MB
+          </div>
+          <Button
+            variant="primary"
+            size="md"
+            onClick={() => {
+              const url = URL.createObjectURL(compressedFile);
+              const a = document.createElement('a');
+              a.href = url;
+              a.download = compressedFile.name;
+              a.click();
+              setTimeout(() => URL.revokeObjectURL(url), 1000);
+            }}
+            style={{ marginTop: '1rem' }}
+          >
+            Download Compressed Video
+          </Button>
+        </>
+      )}
+
+      {/* Error Message */}
+      {error && (
+        <div className={style.progressInfo} style={{ color: '#ef4444', fontWeight: 'bold' }}>
+          {error}
+        </div>
+      )}
+    </div>
+  );
 };
 
 async function getVideoDuration(blob: Blob): Promise<number> {

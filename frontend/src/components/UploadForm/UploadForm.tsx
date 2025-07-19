@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import type {ChangeEvent, FormEvent } from 'react'
 import { useFileValidation } from '../../hooks/UseFileValidation';
 import { VideoCompressor } from '../VideoCompressor';
@@ -28,6 +28,7 @@ type Props = {
 
 export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit }: Props) => {
   const [video, setVideo] = useState<File | null>(null);
+  const [compressedFile, setCompressedFile] = useState<File | null>(null);
   //const [levels, setLevels] = useState(defaultLevels);
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedLevel, setSelectedLevel] = useState('');
@@ -40,7 +41,7 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
   const [progress, setProgress] = useState(0);
   const [success, setSuccess] = useState(false);
   const [showCompressor, setShowCompressor] = useState(false);
-  const { isTooLarge, sizeInMB, MAX_SIZE_MB } = useFileValidation(video || undefined);
+  const { isTooLarge, sizeInMB, MAX_SIZE_MB } = useFileValidation(compressedFile || video || undefined);
   const [showCategoryForm, setShowCategoryForm] = useState(false);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -89,8 +90,9 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
     formData.append('tags', JSON.stringify(tags));
 
     try {
-      await onSubmit({ video, name, category:selectedCategory, level:selectedLevel, tags });
-      setVideo(null);
+      await onSubmit({ video: (compressedFile || video), name, category:selectedCategory, level:selectedLevel, tags });
+      setVideo( null );
+      setCompressedFile( null );
       setName('');
       setSelectedCategory('');
       setSelectedLevel('');
@@ -103,6 +105,15 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
       return;
     }
   };
+  const handleCompressed = useCallback((file: File) => {
+    setCompressedFile(file);
+    setError('');
+    
+  }, []);
+
+  const handleError = useCallback((msg: string) => {
+    setError(msg)
+  }, []);
 
   return (
     <form className={style.formWrapper} onSubmit={handleUpload}>
@@ -110,7 +121,7 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
         <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} />
         <Input label="Select File" type="file" onChange={handleFileChange} />
         {video && <p className={style.fileInfo}>File size: {sizeInMB.toFixed(2)} MB</p>}
-        {video && isTooLarge && (
+        {video && isTooLarge && !showCompressor && (
         <div className={style.compressorBlock}>
           <ErrorMessage message={`File is too large. Please compress it below ${MAX_SIZE_MB} MB.`} />
           <Button type="button" onClick={() => setShowCompressor(true)}>
@@ -118,12 +129,12 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
           </Button>
         </div>
         )}
-        {video && isTooLarge && showCompressor && (
+        {video && showCompressor && (
          <VideoCompressor
           file={video}
-          maxSizeBytes={MAX_SIZE_MB}
-          onCompressed={(file) => setVideo(file)}
-          onError={(msg) => setError(msg)}
+          maxSizeBytes={MAX_SIZE_MB * 1024 * 1024}
+          onCompressed={handleCompressed}
+          onError={handleError}
          />
         )}
       </FormSection>
@@ -160,7 +171,7 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
         </Select>
       </div>
        
-      </FormSection>
+    </FormSection>
      <FormSection title="Tags">
        <div className={style.tagWrapper}>
          <div className={style.tagChipArea}>
@@ -191,7 +202,7 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
       {success && <SuccessMessage message="Upload completed successfully!" />}
       {progress > 0 && <ProgressBar progress={progress} />}
 
-      <Button type="submit" disabled={!video || !name || !selectedCategory || !selectedLevel || !!error || isTooLarge}>
+      <Button type="submit" disabled={!(video && compressedFile) || !name || !selectedCategory || !selectedLevel || !!error || isTooLarge}>
         Upload
       </Button>
 
