@@ -5,10 +5,10 @@ export const filterSection = style({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.space.lg,
-  paddingBottom: vars.space.md,
+  padding: vars.space.md,
   '@media': {
     'screen and (max-width: 900px)': {
-      flexDirection: 'row',
+      flexDirection: 'column',
       flexWrap: 'wrap',
       gap: vars.space.md,
     },

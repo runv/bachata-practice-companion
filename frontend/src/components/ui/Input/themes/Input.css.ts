@@ -30,6 +30,16 @@ export const fileUploadWrapper = style({
   padding: `0 ${vars.space.md}`,
   backgroundColor: vars.color.input,
   cursor: 'pointer',
+  width: '100%',
+  maxWidth: 'clamp(220px, 90vw, 400px)', // Responsive width
+  boxSizing: 'border-box',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      maxWidth: '96vw',
+      gap: vars.space.xs,
+      padding: `0 ${vars.space.sm}`,
+    },
+  },
 });
 
 export const fakeButton = style({
@@ -51,6 +61,13 @@ export const fileName = style({
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   whiteSpace: 'nowrap',
+  maxWidth: '60vw', 
+  '@media': {
+    'screen and (max-width: 600px)': {
+      maxWidth: '40vw',
+      fontSize: vars.font.size.sm,
+    },
+  },
 });
 
 export const hiddenInput = style({

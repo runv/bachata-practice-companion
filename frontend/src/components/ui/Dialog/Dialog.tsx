@@ -56,19 +56,26 @@ export function Dialog({ open, onClose, children, ariaLabel, title }: Props) {
           className={style.dialogStyle}
           style={{
             position: strategy,
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
+            ...(window.innerWidth <= 900
+              ? {
+                  left: '50%',
+                  bottom: 0,
+                  top: 'auto',
+                  transform: 'translate(-50%, 0)',
+                  height: '60vh',
+                  maxHeight: '60vh',
+                }
+              : {
+                  left: '50%',
+                  top: '50%',
+                  transform: 'translate(-50%, -50%)',
+                }),
           }}
           {...getFloatingProps()}
           onClick={e => e.stopPropagation()}
         >
-          {/* Mobile header with close button */}
-          <div className={style.mobileHeader}>
+           <div className={style.mobileHeader}>
             <span>{title || 'Dialog'}</span>
-            <button className={style.closeButton} onClick={onClose} aria-label="Close dialog">
-              ×
-            </button>
           </div>
           {children}
         </div>

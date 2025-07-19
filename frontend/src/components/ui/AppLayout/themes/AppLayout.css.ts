@@ -15,7 +15,7 @@ export const appRoot = style({
 // Main grid container
 export const container = style({
   width: '100%',
-  maxWidth: 'clamp(320px, 90vw, 1200px)', // Fluid, not hardcoded
+  maxWidth: 'clamp(320px, 90vw, 1200px)',
   marginLeft: 'auto',
   marginRight: 'auto',
   display: 'grid',
@@ -59,31 +59,34 @@ export const headerBar = style({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
-  padding: `${vars.space.md} ${vars.space.lg}`,
-  background: vars.color.background,
+  background: vars.color.background, // match container
+  borderTopLeftRadius: vars.radius.xl,
+  borderTopRightRadius: vars.radius.xl,
   borderBottom: `1px solid ${vars.color.border}`,
-  boxShadow: vars.shadow.md,
-  minHeight: '3.5rem',
-  gap: vars.space.md,
+  boxShadow: '0 2px 8px rgba(0,0,0,0.04)', // subtle shadow
+  padding: `clamp(${vars.space.md}, 4vw, ${vars.space.xl})`,
+  minHeight: '2.5rem',
+  gap: vars.space.sm,
+  margin: 0,
   '@media': {
     'screen and (max-width: 900px)': {
-      padding: `${vars.space.sm} ${vars.space.md}`,
-      minHeight: '3rem',
-      gap: vars.space.sm,
+      borderRadius: 0,
+      padding: `clamp(${vars.space.sm}, 4vw, ${vars.space.lg})`,
+      minHeight: '2rem',
+      gap: vars.space.xs,
     },
     'screen and (max-width: 600px)': {
-      flexDirection: 'column',
-      alignItems: 'flex-start',
-      gap: vars.space.sm,
+      borderRadius: 0,
       padding: `${vars.space.xs} ${vars.space.xs}`,
-      minHeight: '2.5rem',
+      minHeight: '2rem',
+      gap: vars.space.xs,
     },
   },
 });
 
 // Title
 export const title = style({
-  fontSize: 'clamp(2rem, 5vw, 2.5rem)',
+  fontSize: 'clamp(1.2rem, 5vw, 1.5rem)',
   fontWeight: 700,
   color: vars.color.text,
   margin: 0,
@@ -92,35 +95,51 @@ export const title = style({
   flex: 1,
   '@media': {
     'screen and (max-width: 600px)': {
-      fontSize: '1.5rem',
+      fontSize: '1.1rem',
     },
   },
 });
 
 // Upload button
 export const uploadButton = style({
-  padding: `${vars.space.sm} ${vars.space.lg}`,
   backgroundColor: vars.color.primary,
   color: vars.color.primaryText,
   border: 'none',
   borderRadius: vars.radius.md,
   cursor: 'pointer',
   fontWeight: 'bold',
-  fontSize: vars.font.size.base,
+  fontSize: vars.font.size.sm,
   boxShadow: vars.shadow.sm,
-  transition: 'background 0.2s',
-  marginLeft: vars.space.md,
+  padding: `${vars.space.xs} ${vars.space.md}`,
+  marginLeft: 0,
   whiteSpace: 'nowrap',
   alignSelf: 'center',
   ':hover': {
     backgroundColor: vars.color.secondary,
   },
+});
+
+// Filter button (for mobile)
+export const filterButton = style({
+  display: 'none',
   '@media': {
-    'screen and (max-width: 600px)': {
-      marginLeft: 0,
-      width: '100%',
+    'screen and (max-width: 900px)': {
+      backgroundColor: vars.color.primary,
+      color: vars.color.primaryText,
+      border: 'none',
+      borderRadius: vars.radius.md,
+      cursor: 'pointer',
+      fontWeight: 'bold',
       fontSize: vars.font.size.sm,
-      alignSelf: 'stretch',
+      boxShadow: vars.shadow.sm,
+      padding: `${vars.space.xs} ${vars.space.md}`,
+      marginLeft: 0,
+      whiteSpace: 'nowrap',
+      alignSelf: 'center',
+      display: 'inline-block',
+      ':hover': {
+        backgroundColor: vars.color.secondary,
+      },
     },
   },
 });
@@ -167,27 +186,7 @@ export const filtersSidebar = style({
   marginBottom: vars.space.xl, // Add gap below filters
   '@media': {
     'screen and (max-width: 900px)': {
-      position: 'static',
-      minWidth: 'unset',
-      maxWidth: 'unset',
-      gridColumn: '1',
-      gridRow: '2',
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      width: '100%',
-      padding: vars.space.md,
-      gap: vars.space.sm,
-      marginBottom: vars.space.md,
-      borderRadius: vars.radius.md,
-      boxShadow: 'none',
-    },
-    'screen and (max-width: 600px)': {
-      flexDirection: 'column',
-      width: '100%',
-      padding: vars.space.sm,
-      gap: vars.space.xs,
-      marginBottom: vars.space.sm,
-      borderRadius: vars.radius.md,
+      display: 'none', // Hide sidebar on small screens
     },
   },
 });
@@ -212,6 +211,21 @@ export const thumbnailsSection = style({
     'screen and (max-width: 600px)': {
       gap: vars.space.xs,
       marginTop: 0,
+    },
+  },
+});
+
+
+
+// Header actions
+export const headerActions = style({
+  display: 'flex',
+  flexDirection: 'row',
+  gap: vars.space.sm,
+  alignItems: 'center',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      gap: vars.space.xs,
     },
   },
 });

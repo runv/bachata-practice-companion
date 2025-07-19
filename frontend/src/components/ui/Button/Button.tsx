@@ -10,7 +10,7 @@ interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
 export const Button = ({ variant = 'primary', size='md', disabled, ...props }: Props) => {
   return (
     <button
-      className={clsx(button[variant], buttonSize[size], disabled && button['disabled'])}
+      className={clsx(button[variant], buttonSize[size], disabled && button['disabled'], props.className)}
       disabled={disabled}
       {...props}
     />

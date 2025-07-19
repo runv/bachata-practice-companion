@@ -54,8 +54,19 @@ export const tagChipArea = style({
   display: 'flex',
   flexWrap: 'wrap',
   gap: vars.space.sm,
-  maxHeight: '8rem',
+  maxWidth: '100%',
+  maxHeight: '10rem',
   overflowY: 'auto',
+  '@media': {
+    'screen and (max-width: 900px)': {
+      maxHeight: '6rem',
+      gap: vars.space.xs,
+    },
+    'screen and (max-width: 600px)': {
+      maxHeight: '4rem',
+      gap: vars.space.xs,
+    },
+  },
 });
 
 export const tagsInputRow = style({
@@ -70,52 +81,18 @@ export const compressorBlock = style({
   border: `1px solid ${vars.color.error}`,
   borderRadius: vars.radius.md,
   backgroundColor: vars.color.errorBackground,
-});
-
-/*export const tagRow = style({
-  display: 'flex',
-  gap: '0.5rem',
-});
-
-export const tagList = style({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: '0.5rem',
-  marginTop: '1rem',
-});
-export const tagsWrap = style({
-  display: 'flex',
-  flexWrap: 'wrap',
-  gap: vars.space.xs,
-  marginTop: vars.space.sm,
-});*/
-
-/*export const formWrapper = style({
+  maxWidth: 'clamp(220px, 80vw, 480px)', 
+  width: '100%',
+  boxSizing: 'border-box',
   display: 'flex',
   flexDirection: 'column',
-  gap: '1.5rem',
-  maxWidth: '600px',
-  width: '100%',
-  margin: '0 auto',
-  padding: '1rem',
-});*/
-/*export const formWrapper = style({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: vars.space.lg,
-  padding: vars.space.xl,
-  backgroundColor: vars.color.background,
-  borderRadius: vars.radius.lg,
-  boxShadow: vars.shadow.md,
-  width: '100%',
-  maxWidth: 600,
-  margin: '0 auto',
+  alignItems: 'center',
+  gap: vars.space.md,
+  '@media': {
+    'screen and (max-width: 600px)': {
+      maxWidth: '90vw',
+      padding: vars.space.sm,
+      gap: vars.space.sm,
+    },
+  },
 });
-
-export const compressorBlock = style({
-  marginTop: vars.space.md,
-  padding: vars.space.md,
-  border: `1px solid ${vars.color.error}`,
-  borderRadius: vars.radius.md,
-  backgroundColor: vars.color.errorBackground,
-});*/

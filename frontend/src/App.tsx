@@ -12,6 +12,7 @@ import {
 } from './api/videoApi';
 import { AppLayout } from './components/ui/AppLayout';
 import { Dialog } from './components/ui/Dialog';
+import { FilterModal } from './components/Filtering';
 
 
 const defaultLevels = ['Beginner', 'Intermediate', 'Advanced'];
@@ -33,6 +34,7 @@ function App() {
  const [selectedLevel, setSelectedLevel] = useState('');
  const [selectedTags, setSelectedTags] = useState<string[]>([]);
  const [showUploadDialog, setShowUploadDialog] = useState(false); 
+ const [showFilterModal, setShowFilterModal] = useState(false);
 
   // Fetch videos
  useEffect(() => {
@@ -93,6 +95,7 @@ const handleUploadSubmit = async (data: Data) => {
       <AppLayout
         title="Bachata Practice Companion"
         onUploadClick={() => setShowUploadDialog(true)}
+        onFilterClick={() => setShowFilterModal(true)}
         filters={
           <Filtering
               selectedCategory={selectedCategory}
@@ -126,6 +129,19 @@ const handleUploadSubmit = async (data: Data) => {
           onAddCategory={handleAddCategory}
         />
       </Dialog>
+      <FilterModal
+        open={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        selectedCategory={selectedCategory}
+        selectedLevel={selectedLevel}
+        onCategoryChange={setSelectedCategory}
+        onLevelChange={setSelectedLevel}
+        categories={categories}
+        levels={defaultLevels}
+        tags={tags}
+        selectedTags={selectedTags}
+        onToggleTag={toggleTag}
+      />
     </>
   );
 }
