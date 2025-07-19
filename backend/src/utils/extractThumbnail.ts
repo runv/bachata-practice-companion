@@ -11,6 +11,7 @@ export const extractThumbnail = (videoPath: string, thumbnailPath: string): Prom
         filename: path.basename(thumbnailPath),
         folder: path.dirname(thumbnailPath),
         size: '?x240'//'320x?'
-      });
+      })
+     // .aspect('4:3');
   });
 };

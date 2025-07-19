@@ -106,11 +106,19 @@ const handleUploadSubmit = async (data: Data) => {
               onToggleTag={toggleTag}
           />
         }
-        thumbnails={<VideoList videos={filteredVideos} />}
+        thumbnails={
+          <VideoList 
+            videos={filteredVideos} 
+            onUploadClick={() => setShowUploadDialog(true)} 
+          />
+        }
       />
       <Dialog 
          open={showUploadDialog} 
-         onClose={() => setShowUploadDialog(false)} ariaLabel="Upload Video">
+         onClose={() => setShowUploadDialog(false)} 
+         ariaLabel="Upload Video"
+         title="Upload Video"
+      >
         <UploadForm 
           categories={categories}
           defaultLevels={defaultLevels}

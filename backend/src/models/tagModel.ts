@@ -7,6 +7,8 @@ const ensureTagsFile = async () => {
   try {
     await fs.access(tagsPath);
   } catch {
+    await fs.mkdir(path.dirname(tagsPath), { recursive: true });
+    //const defaults = await fs.readFile(tagsPath, 'utf-8');
     await fs.writeFile(tagsPath, '[]', 'utf-8');
   }
 };

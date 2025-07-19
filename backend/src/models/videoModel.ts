@@ -27,6 +27,8 @@ const ensureMetadataFile = async () => {
     await fs.access(metadataPath);
   } catch {
     // Create an empty metadata file if it doesn't exist
+    await fs.mkdir(path.dirname(metadataPath), { recursive: true });
+    //const defaults = await fs.readFile(metadataPath, 'utf-8');
     await fs.writeFile(metadataPath, '[]', 'utf-8');
   }
 };

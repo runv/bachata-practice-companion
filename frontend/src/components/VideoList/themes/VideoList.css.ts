@@ -8,7 +8,6 @@ export const thumbnailGrid = style({
   width: '100%',
   justifyItems: 'center',
   alignItems: 'start',
-  padding: '1rem 0',
   '@media': {
     'screen and (max-width: 900px)': {
       gridTemplateColumns: 'repeat(2, 1fr)',
@@ -27,8 +26,9 @@ export const thumbnailCard = style({
   padding: 'clamp(0.75rem, 2vw, 1.25rem)',
   boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
   textAlign: 'center',
-  width: '100%',
-  minHeight: 'clamp(120px, 30vw, 180px)',
+  //width: '100%',
+  minHeight: '10vw',
+  //minHeight: 'clamp(80px, 30vw, 120px)',
   maxWidth: 'clamp(140px, 40vw, 200px)',
   display: 'flex',
   flexDirection: 'column',
@@ -42,6 +42,11 @@ export const thumbnailCard = style({
   '@media': {
     'screen and (max-width: 600px)': {
       padding: '0.5rem',
+      flexDirection: 'row',
+      alignItems: 'center',
+      maxWidth: '100%',
+      width: '90%',
+      gap: '0.75rem'
     },
   },
 });
@@ -51,6 +56,16 @@ export const thumbnail = style({
   flexDirection: 'column',
   alignItems: 'center',
   gap: '0.25rem', // Add a small gap between elements
+  '@media': {
+    'screen and (max-width: 600px)': {
+      padding: '0.5rem',
+      flexDirection: 'row',
+      alignItems: 'center',
+      maxWidth: '100%',
+      width: '100%',
+      gap: '0.75rem'
+    },
+  },
 });
 
 export const thumbnailImage = style({
@@ -59,19 +74,72 @@ export const thumbnailImage = style({
   borderRadius: '8px',
   objectFit: 'cover',
   marginBottom: '0.5rem',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      width: '100px',
+      height: 'auto',
+      marginBottom: 0,
+    },
+  },
+  
 });
+
+export const thumbnailText = style({
+'@media': {
+    'screen and (max-width: 600px)': {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      flex: 1,
+    },
+  },
+
+})
 
 export const title = style({
   fontSize: '1rem',
   fontWeight: 600,
   margin: 0, // Remove default margin
-  whiteSpace: 'nowrap',
+  whiteSpace: 'wrap',
   overflow: 'hidden',
   textOverflow: 'ellipsis',
+  '@media': {
+    'screen and (max-width: 600px)': {
+       whiteSpace: 'normal',
+       textOverflow: 'unset',
+       overflow: 'unset'
+    },
+  }
 });
 
 export const categoryLevel = style({
   margin: 0, // Remove default margin
   fontSize: '0.95rem',
   color: '#555',
+});
+
+export const emptyState = style({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  minHeight: '40vh',
+  width: '100%',
+  color: '#6b7280',
+  fontSize: 'clamp(1rem, 2vw, 1.25rem)',
+  gap: '1.5rem',
+  background: 'transparent',
+  '@media': {
+    'screen and (max-width: 600px)': {
+      minHeight: '30vh',
+      fontSize: '1rem',
+      gap: '1rem',
+    },
+  },
+});
+
+export const emptyIcon = style({
+  fontSize: '3rem',
+  marginBottom: '0.5rem',
+  opacity: 0.7,
 });

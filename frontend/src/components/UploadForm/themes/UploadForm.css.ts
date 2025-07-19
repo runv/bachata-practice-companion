@@ -6,13 +6,24 @@ export const formWrapper = style({
   display: 'flex',
   flexDirection: 'column',
   gap: vars.space.lg,
-  padding: vars.space.xl,
-  backgroundColor: vars.color.background,
-  borderRadius: vars.radius.lg,
-  boxShadow: vars.shadow.md,
+  padding: '0',
+  backgroundColor: 'transparent',
+  borderRadius: 0,
+  boxShadow: 'none',
   width: '100%',
-  maxWidth: 600,
-  margin: '0 auto',
+  maxWidth: '100%',
+  margin: 0,
+  '@media': {
+    'screen and (max-width: 600px)': {
+      gap: vars.space.md,
+      padding: '0',
+      borderRadius: 0,
+      boxShadow: 'none',
+      width: '100vw',
+      maxWidth: '100vw',
+      margin: 0,
+    },
+  },
 });
 
 export const fileInfo = style({

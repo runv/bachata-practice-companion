@@ -33,7 +33,7 @@ export const Filtering = ({
           label=""
           value={selectedCategory}
           onChange={(e) => onCategoryChange(e.target.value)}
-          options={['All', ...categories]}
+          options={categories}
         />
       </div>
       <div className={styles.filterGroup}>
@@ -42,7 +42,7 @@ export const Filtering = ({
           label=""
           value={selectedLevel}
           onChange={(e) => onLevelChange(e.target.value)}
-          options={['All', ...levels]}
+          options={levels}
         />
       </div>
       <div className={styles.filterGroup}>

@@ -28,8 +28,9 @@ export async function addCategory(newCategory: string): Promise<string[]> {
 
 export async function ensureCategoriesInitialized(): Promise<void> {
   try {
-    await fs.access(STORAGE_PATH);
+    await fs.access(STORAGE_PATH); 
   } catch {
+    await fs.mkdir(path.dirname(STORAGE_PATH), { recursive: true });
     const defaults = await fs.readFile(CONFIG_PATH, 'utf-8');
     await fs.writeFile(STORAGE_PATH, defaults, 'utf-8');
   }

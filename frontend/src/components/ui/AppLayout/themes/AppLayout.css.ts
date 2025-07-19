@@ -8,7 +8,7 @@ export const appRoot = style({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  padding: `clamp(${vars.space.md}, 4vw, ${vars.space.xl})`,
+  padding: `clamp(${vars.space.xl}, 6vw, ${vars.space.xl}) 0 0 0`, // More top padding
   boxSizing: 'border-box',
 });
 
@@ -164,6 +164,7 @@ export const filtersSidebar = style({
   minWidth: '12rem',
   maxWidth: '18rem',
   zIndex: 20,
+  marginBottom: vars.space.xl, // Add gap below filters
   '@media': {
     'screen and (max-width: 900px)': {
       position: 'static',
@@ -176,7 +177,7 @@ export const filtersSidebar = style({
       width: '100%',
       padding: vars.space.md,
       gap: vars.space.sm,
-      marginBottom: vars.space.sm,
+      marginBottom: vars.space.md,
       borderRadius: vars.radius.md,
       boxShadow: 'none',
     },
@@ -185,7 +186,7 @@ export const filtersSidebar = style({
       width: '100%',
       padding: vars.space.sm,
       gap: vars.space.xs,
-      marginBottom: vars.space.xs,
+      marginBottom: vars.space.sm,
       borderRadius: vars.radius.md,
     },
   },

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Button } from '../ui/Button';
 import * as styles from './themes/VideoList.css'; 
 
 export type VideoMeta = {
@@ -12,16 +13,26 @@ export type VideoMeta = {
 
 type Props = {
   videos: VideoMeta[];
+  onUploadClick?: () => void;
 };
 
-export const VideoList = ({ videos }: Props) => {
+export const VideoList = ({ videos, onUploadClick }: Props) => {
   const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
 
-  //if (loading) return <div>Loading videos...</div>;
+  if (videos.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <span className={styles.emptyIcon}>📹</span>
+        <div>No videos uploaded yet.</div>
+        <Button variant="primary" size="md" onClick={onUploadClick}>
+          Upload your first video
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.thumbnailGrid}>
-      {videos.length === 0 && <p>No videos uploaded yet.</p>}
       {videos.map((video) => (
         <div key={video.name} className={styles.thumbnailCard}>
           <div className={styles.thumbnail}>
@@ -33,8 +44,13 @@ export const VideoList = ({ videos }: Props) => {
                   () => setSelectedVideo(video.filename)
               }
             />
-            <h3 className={styles.title}>{video.name}</h3>
-            <p className={styles.categoryLevel}>{video.style} • {video.level}</p>
+            <div className={styles.thumbnailText}>
+              <h3 className={styles.title}>{video.name}</h3>
+              <p className={styles.categoryLevel}>
+                <div>{video.style}</div> 
+                <div>{video.level}</div>
+              </p>
+            </div>
           </div>
         </div>
       ))}
