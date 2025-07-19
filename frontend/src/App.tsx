@@ -58,6 +58,7 @@ const handleAddCategory = async (category: string) => {
     setCategories(response);
   };
   addCategory();
+  setRefreshToggle(!refreshToggle); // trigger refresh
 };
 
 const handleUploadSubmit = async (data: Data) => {

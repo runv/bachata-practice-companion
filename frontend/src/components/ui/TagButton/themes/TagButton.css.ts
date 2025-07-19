@@ -4,7 +4,7 @@ import { vars } from '../../../Common/styles/theme.css';
 
 export const tagButton = style({
   display: 'inline-block',
-  backgroundColor: vars.color.tag,
+  backgroundColor: vars.color.primary,
   color: vars.color.text,
   padding: `4px 8px`,
   borderRadius: vars.radius.sm,
@@ -15,7 +15,8 @@ export const tagButton = style({
   cursor: 'pointer',
   selectors: {
     '&:hover': {
-      backgroundColor: vars.color.primary,
+    //  backgroundColor: vars.color.tag,
+      opacity: 0.7,
       color: '#fff',
     },
   },

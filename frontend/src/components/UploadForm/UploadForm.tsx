@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type {ChangeEvent, FormEvent } from 'react'
 import { useFileValidation } from '../../hooks/UseFileValidation';
 import { VideoCompressor } from '../VideoCompressor';
-import { FormSection } from '../ui/FormSection';
+import { FormSection, LayoutRow } from '../ui/FormSection';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
 import { ErrorMessage } from '../ui/ErrorMessage';
@@ -10,7 +10,6 @@ import { ProgressBar } from '../ui/ProgressBar';
 import { TagButton } from '../ui/TagButton';
 import { SuccessMessage } from '../ui/SuccessMessage';
 import { Select } from '../ui/Select';
-import { FileInfo } from '../ui/FileInfo';
 import * as style from './themes/UploadForm.css';
 
 
@@ -42,6 +41,7 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
   const [success, setSuccess] = useState(false);
   const [showCompressor, setShowCompressor] = useState(false);
   const { isTooLarge, sizeInMB, MAX_SIZE_MB } = useFileValidation(video || undefined);
+  const [showCategoryForm, setShowCategoryForm] = useState(false);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -57,8 +57,20 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
       setTags([...tags, clean]);
     }
     setNewTag('');
+  
   };
 
+  const handleAddCategory = async () => {
+    const clean = newCategory.trim().toLowerCase();
+    try {
+      await onAddCategory(clean);
+      setNewCategory('');
+      setShowCategoryForm(false); // Hide form again
+    } catch (e) {
+      setError('Upload failed ' + (e as Error).message);
+      return;
+    }
+  };
 
   const handleUpload = async (e: FormEvent) => {
     e.preventDefault();
@@ -97,52 +109,81 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
       <FormSection title="Video Info">
         <Input label="Name" value={name} onChange={(e) => setName(e.target.value)} />
         <Input label="Select File" type="file" onChange={handleFileChange} />
-         {video && <p className={style.fileInfo}>File size: {sizeInMB.toFixed(2)} MB</p>}
+        {video && <p className={style.fileInfo}>File size: {sizeInMB.toFixed(2)} MB</p>}
+        {video && isTooLarge && (
+        <div className={style.compressorBlock}>
+          <ErrorMessage message={`File is too large. Please compress it below ${MAX_SIZE_MB} MB.`} />
+          <Button type="button" onClick={() => setShowCompressor(true)}>
+            Compress Video
+          </Button>
+        </div>
+        )}
+        {video && isTooLarge && showCompressor && (
+         <VideoCompressor
+          file={video}
+          maxSizeBytes={MAX_SIZE_MB}
+          onCompressed={(file) => setVideo(file)}
+          onError={(msg) => setError(msg)}
+         />
+        )}
+      </FormSection>
+      <FormSection title="Category & Level">
+        <div className={style.stackedSelectWrapper}>
+         {/* Category */}
+          <label htmlFor="category">Category</label>
+          <Select 
+              label="" // handled by external label
+              value={selectedCategory} 
+              options={categories}
+              onChange={(e) => setSelectedCategory(e.target.value)}>
+          </Select>
+          {showCategoryForm ? (
+          <div className={style.addCategoryRow}>
+            <Input value={newCategory} onChange={(e) => setNewCategory(e.target.value)} placeholder="Add New Category" />
+            <Button onClick={handleAddCategory}>Add</Button>
+          </div>
+         ) : (
+          <Button
+            variant="ghost"
+            onClick={() => setShowCategoryForm(true)}
+          >
+            + Add new category
+          </Button>
+        )}
+        {/* Level */}
+        <label htmlFor="level">Level</label>
         <Select 
-          label="Category" 
-          value={selectedCategory} 
-          options={categories}
-          onChange={(e) => setSelectedCategory(e.target.value)}>
-        </Select>
-        <Select 
-          label="Level" 
+          label="" 
           value={selectedLevel} 
           options={defaultLevels}
           onChange={(e) => setSelectedLevel(e.target.value)}>
         </Select>
+      </div>
+       
       </FormSection>
-      <FormSection title="Add New Category">
-        <div className={style.tagsRow}>
-         <Input label="Add New Category" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
-         <Button type="button" onClick={() => {
-            if (newCategory.trim()) {
-              onAddCategory(newCategory.trim());
-              setNewCategory('');
-            }
-          }}>Add Category</Button>
-        </div>  
-     </FormSection>
-
      <FormSection title="Tags">
-        <div className={style.tagsRow}>
-          <Input
-            label="Add Tag"
-            value={newTag}
-            onChange={(e) => setNewTag(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
-          />
-          <Button type="button" onClick={handleAddTag}>Add</Button>
-        </div>
-        <div className={style.tagsWrap}>
-          {tags.map((tag) => (
-            <TagButton
-              key={tag}
-              label={tag}
-              selected
-              onClick={() => setTags(tags.filter((t) => t !== tag))}
+       <div className={style.tagWrapper}>
+         <div className={style.tagChipArea}>
+            {tags.map((tag) => (
+              <TagButton
+                key={tag}
+                label={tag}
+                selected
+                onClick={() => setTags(tags.filter((t) => t !== tag))}
+              />
+            ))}
+          </div>
+          <div className={style.tagsInputRow}>
+            <Input
+              label="Add Tag"
+              value={newTag}
+              onChange={(e) => setNewTag(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTag())}
             />
-          ))}
-        </div>
+            <Button type="button" onClick={handleAddTag}>Add</Button>
+          </div>
+      </div>
+     
      </FormSection>
 
 
@@ -154,24 +195,7 @@ export const UploadForm = ({ categories, defaultLevels, onAddCategory, onSubmit 
         Upload
       </Button>
 
-      {video && isTooLarge && (
-        <div className={style.compressorBlock}>
-          <ErrorMessage message={`File is too large. Please compress it below ${MAX_SIZE_MB} MB.`} />
-          <Button type="button" onClick={() => setShowCompressor(true)}>
-            Compress Video
-          </Button>
-        </div>
-      )}
-
-
-      {video && isTooLarge && showCompressor && (
-        <VideoCompressor
-          file={video}
-          maxSizeBytes={MAX_SIZE_MB}
-          onCompressed={(file) => setVideo(file)}
-          onError={(msg) => setError(msg)}
-        />
-      )}
+     
     </form>
   );
 };

@@ -51,6 +51,18 @@ export const vars = createGlobalThemeContract({
     sm: null,
     md: null,
     lg: null
+  },
+  formElement: {
+    height: {
+      sm: null,
+      md: null,
+      lg: null
+    },
+    paddingX: {
+      sm: null,
+      md: null,
+      lg: null
+    }
   }
 }, pathFormatter);
 
@@ -62,7 +74,7 @@ const themeDefinition = {
     background: '#ffffff',
     input: '#f9fafb',
     border: '#d1d5db',
-    primary: '#9333ea',
+    primary: '#1976d2',
     primaryText: '#ffffff',
     secondary: '#3949ab',
     error: '#ef4444',
@@ -75,30 +87,42 @@ const themeDefinition = {
   },
   font: {
     size: {
-      xs: '12px',
-      sm: '14px',
-      base: '16px',
-      lg: '18px',
-      xl: '20px'
+      xs: '0.75rem',   // 12px
+      sm: '0.875rem',  // 14px
+      base: '1rem',    // 16px
+      lg: '1.125rem',  // 18px
+      xl: '1.25rem'    // 20px
     },
   },
   space: {
-    xs: '4px',
-    sm: '8px',
-    md: '12px',
-    lg: '16px',
-    xl: '24px'
+    xs: '0.25rem',    // 4px
+    sm: '0.5rem',     // 8px
+    md: '0.75rem',    // 12px
+    lg: '1rem',       // 16px
+    xl: '1.5rem'      // 24px
   },
   radius: {
-    sm: '4px',
-    md: '6px',
-    lg: '8px',
-    xl: '12px'
+    sm: '0.25rem',    // 4px
+    md: '0.375rem',   // 6px
+    lg: '0.5rem',     // 8px
+    xl: '0.75rem'     // 12px
   },
   shadow: {
-    sm: '0 1px 2px rgba(0, 0, 0, 0.05)',
-    md: '0 2px 4px rgba(0, 0, 0, 0.1)',
-    lg: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    sm: '0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05)',  // 1px 2px
+    md: '0 0.125rem 0.25rem rgba(0, 0, 0, 0.1)',     // 2px 4px
+    lg: '0 0.25rem 0.375rem rgba(0, 0, 0, 0.1)'      // 4px 6px
+  },
+  formElement: {
+    height: {
+      sm: '2rem',
+      md: '2.5rem',
+      lg: '3rem'
+    },
+    paddingX: {
+      sm: '0.75rem',
+      md: '1rem',
+      lg: '1.25rem'
+    }
   }
 };
 

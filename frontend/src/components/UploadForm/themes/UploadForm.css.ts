@@ -21,18 +21,36 @@ export const fileInfo = style({
   marginTop: vars.space.sm,
 });
 
-export const tagsRow = style({
+export const stackedSelectWrapper = style({
   display: 'flex',
+  flexDirection: 'column',
   gap: vars.space.sm,
-  alignItems: 'flex-end',
-  flexWrap: 'wrap',
 });
 
-export const tagsWrap = style({
+export const addCategoryRow = style({
+  display: 'flex',
+  gap: vars.space.sm,
+  alignItems: 'last baseline',
+});
+
+export const tagWrapper = style({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: vars.space.sm,
+});
+
+export const tagChipArea = style({
   display: 'flex',
   flexWrap: 'wrap',
-  gap: vars.space.xs,
-  marginTop: vars.space.sm,
+  gap: vars.space.sm,
+  maxHeight: '8rem',
+  overflowY: 'auto',
+});
+
+export const tagsInputRow = style({
+  display: 'flex',
+  alignItems: 'last baseline',
+  gap: vars.space.sm,
 });
 
 export const compressorBlock = style({

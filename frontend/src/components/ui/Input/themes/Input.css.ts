@@ -1,4 +1,5 @@
-import { style } from '@vanilla-extract/css';
+import { style, styleVariants } from '@vanilla-extract/css';
+import { vars } from '../../../Common/styles/theme.css';
 
 export const labelWrapper = style({
   display: 'flex',
@@ -17,4 +18,56 @@ export const input = style({
   fontSize: '1rem',
   borderRadius: '6px',
   border: '1px solid #ccc'
+});
+
+export const fileUploadWrapper = style({
+  display: 'flex',
+  alignItems: 'center',
+  gap: '1rem',
+  height: vars.formElement.height.md,
+  border: `1px solid ${vars.color.border}`,
+  borderRadius: vars.radius.md,
+  padding: `0 ${vars.space.md}`,
+  backgroundColor: vars.color.input,
+  cursor: 'pointer',
+});
+
+export const fakeButton = style({
+  backgroundColor: vars.color.primary,
+  color: vars.color.primaryText,
+  padding: `0 ${vars.formElement.paddingX.md}`,
+  borderRadius: vars.radius.sm,
+  height: '2rem',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  fontWeight: 'bold',
+  whiteSpace: 'nowrap',
+});
+
+export const fileName = style({
+  color: vars.color.text,
+  fontSize: vars.font.size.base,
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+});
+
+export const hiddenInput = style({
+  display: 'none',
+});
+
+export const inputSize = styleVariants({
+  sm: {
+    height: vars.formElement.height.sm,
+    padding: `0 ${vars.formElement.paddingX.sm}`
+  },
+  md: {
+    height: vars.formElement.height.md,
+    padding: `0 ${vars.formElement.paddingX.md}`
+  },
+  lg: {
+    height: vars.formElement.height.lg,
+    padding: `0 ${vars.formElement.paddingX.sm}`
+  },
 });

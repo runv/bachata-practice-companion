@@ -36,6 +36,21 @@ export const button = styleVariants({
   },
 });
 
+export const buttonSize = styleVariants({
+  sm: {
+    height: vars.formElement.height.sm,
+    padding: `0 ${vars.formElement.paddingX.sm}`,
+  },
+  md: {
+    height: vars.formElement.height.md,
+    padding: `0 ${vars.formElement.paddingX.md}`,
+  },
+  lg: {
+    height: vars.formElement.height.lg,
+    padding: `0 ${vars.formElement.paddingX.lg}`,
+  },
+});
+
 
 /*export const button = style({
   border: 'none',
