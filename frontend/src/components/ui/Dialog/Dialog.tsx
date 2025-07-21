@@ -56,12 +56,12 @@ export function Dialog({ open, onClose, children, ariaLabel, title }: Props) {
           className={style.dialogStyle}
           style={{
             position: strategy,
-            ...(window.innerWidth <= 900
+            ...(window.innerWidth <= 600
               ? {
-                  left: '50%',
+                  left: 0,
                   bottom: 0,
+                  margin: '0 auto', 
                   top: 'auto',
-                  transform: 'translate(-50%, 0)',
                   height: '60vh',
                   maxHeight: '60vh',
                 }
